@@ -274,7 +274,47 @@ const Transaction: React.FC = () => {
                         onChange={(e) => setFizzBuzz(parseInt(e.target.value) || 0)}
                         className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl w-1/4 " />
                     <button onClick={handleFizzBuzz} className="bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg">Mulai</button>
-                    <span className="text-wrap">{resultFizzBuzz}</span>
+                    <span className="text-wrap mb-10">{resultFizzBuzz}</span>
+                    <span className='text-2xl'>Code</span>
+                    <div className='border border-white px-4 w-full  rounded-2xl'>
+                        <pre className='text-wrap text-green-300'>
+                            {`
+export default function FizzBuzz(n: number) {
+    if(n < 1) {
+        return "Tidak bisa input kurang dari 1"
+    }
+
+    if(n > 10000) {
+        return "Tidak bisa input lebih dari 10000"
+    }
+
+    let result = [];
+    
+    for (let i = 1; i <= n; i++) {
+        if (i % 3 === 0 && i % 5 === 0 && i % 7 === 0) {
+            result.push("FizzBuzz");
+        } else if (i % 3 === 0 && i % 5 === 0) {
+            result.push("Fizz1");
+        } else if (i % 3 === 0 && i % 7 === 0) {
+            result.push("Fizz2");
+        } else if (i % 5 === 0 && i % 7 === 0) {
+            result.push("Fizz3");
+        } else if (i % 3 === 0) {
+            result.push("Buzz1");
+        } else if (i % 5 === 0) {
+            result.push("Buzz2");
+        } else if (i % 7 === 0) {
+            result.push("Buzz3");
+        } else {
+            result.push(i.toString());
+        }
+    }
+
+    return result.join(', ');
+}
+                            `}
+                        </pre>
+                    </div>
                 </div>
             </div>
 
@@ -320,6 +360,49 @@ const Transaction: React.FC = () => {
                     </div>
                     <button onClick={handleBinerString} className="bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg">Mulai</button>
                     <span className="text-wrap">{resultBinerString}</span>
+                    <span className='text-2xl'>Code</span>
+                    <div className='border border-white px-4 w-full rounded-2xl'>
+                        <pre className='text-wrap text-green-300'>
+                            {`
+export function BinerString(strs: string[], m: number, n: number): number {
+    const dp: number[][][] = new Array(strs.length + 1);
+    for (let i = 0; i <= strs.length; i++) {
+        dp[i] = new Array(m + 1);
+        for (let j = 0; j <= m; j++) {
+            dp[i][j] = new Array(n + 1).fill(0);
+        }
+    }
+    
+    for (let i = 1; i <= strs.length; i++) {
+        const zeroCount = countZeroes(strs[i - 1]);
+        const oneCount = strs[i - 1].length - zeroCount;
+        
+        for (let j = 0; j <= m; j++) {
+            for (let k = 0; k <= n; k++) {
+                if (j >= zeroCount && k >= oneCount) {
+                    dp[i][j][k] = Math.max(dp[i-1][j][k], dp[i-1][j-zeroCount][k-oneCount] + 1);
+                } else {
+                    dp[i][j][k] = dp[i-1][j][k];
+                }
+            }
+        }
+    }
+    
+    return dp[strs.length][m][n];
+}
+
+function countZeroes(str: string): number {
+    let count = 0;
+    for (let char of str) {
+        if (char === '0') {
+            count++;
+        }
+    }
+    return count;
+}
+                            `}
+                        </pre>
+                    </div>
                 </div>
             </div>
 
@@ -354,6 +437,49 @@ const Transaction: React.FC = () => {
                     </div>
                     <button onClick={handleSplitArray} className="bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg">Mulai</button>
                     <span className="text-wrap">{resultSplitArray}</span>
+                    <span className='text-2xl'>Code</span>
+                    <div className='border border-white px-4 w-full rounded-2xl'>
+                        <pre className='text-wrap text-green-300'>
+                            {`
+export default function SplitArray (nums: number[], k: number): number {
+    function canSplit(nums: number[], k: number, maxSum: number): boolean {
+        let currentSum = 0;
+        let subarrays = 1;
+
+        for (const num of nums) {
+            if (currentSum + num > maxSum) {
+                subarrays++;
+                currentSum = num;
+
+                if (subarrays > k) {
+                    return false;
+                }
+            } else {
+                currentSum += num;
+            }
+        }
+
+        return true;
+    }
+
+    let low = Math.max(...nums);
+    let high = nums.reduce((a, b) => a + b, 0);
+
+    while (low < high) {
+        const mid = Math.floor((low + high) / 2);
+
+        if (canSplit(nums, k, mid)) {
+            high = mid;
+        } else {
+            low = mid + 1;
+        }
+    }
+
+    return low;
+}
+                            `}
+                        </pre>
+                    </div>
                 </div>
             </div>
 
