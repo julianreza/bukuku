@@ -1,10 +1,7 @@
 "use client"
 
 import Header from '@/components/Header';
-import { BinerString } from '@/utils/biner-string';
 import { convertToSimpleDate } from '@/utils/date';
-import FizzBuzz from '@/utils/fizz-buzz';
-import SplitArray from '@/utils/split-array';
 import { createClient } from '@/utils/supabase/client';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -29,21 +26,6 @@ const Transaction: React.FC = () => {
     const [idData, setIdData] = useState<string>('')
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    // fizzbuzz
-    const [fizzBuzz, setFizzBuzz] = useState<number>(0)
-    const [resultFizzBuzz, setResultFizzBuzz] = useState<string>('')
-
-    // biner  string
-    const [binerString, setBinerString] = useState<string>('')
-    const [mBinerString, setMbinerString] = useState<number>(0)
-    const [nBinerString, setNbinerString] = useState<number>(0)
-    const [resultBinerString, setResultBinerString] = useState<string>('')
-
-    // split array
-    const [splitArray, setSplitArray] = useState<string>('')
-    const [kSplitArray, setKsplitArray] = useState<number>(0)
-    const [resultSplitArray, setResultSplitArray] = useState<number>(0)
-
     const Loader = () => {
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-5">
@@ -53,7 +35,6 @@ const Transaction: React.FC = () => {
     }
 
     const getData = async () => {
-        setIsLoading(true)
         const { data } = await supabase
             .from("transactions")
             .select()
@@ -62,7 +43,6 @@ const Transaction: React.FC = () => {
     }
 
     const getBalance = async () => {
-        setIsLoading(true)
         const { data: latestTransaction, error } = await supabase
             .from('transactions')
             .select('balance')
@@ -78,9 +58,10 @@ const Transaction: React.FC = () => {
     }
 
     useEffect(() => {
+        // setIsLoading(true)
         getData()
         getBalance()
-        setIsLoading(false)
+        // setIsLoading(false)
     }, [])
 
 
@@ -213,25 +194,6 @@ const Transaction: React.FC = () => {
         setIsLoading(false)
     }
 
-    const handleFizzBuzz = () => {
-        const result = FizzBuzz(fizzBuzz)
-        setResultFizzBuzz(result)
-    }
-
-    const handleBinerString = () => {
-        const newBinerString = binerString.split(',')
-        const result = BinerString(newBinerString, mBinerString, nBinerString)
-        setResultBinerString(result.toString())
-    }
-
-    const handleSplitArray = () => {
-        const newBinerString = splitArray.split(',').map(function (item) {
-            return parseInt(item)
-        })
-        const result = SplitArray(newBinerString, kSplitArray)
-        setResultSplitArray(result)
-    }
-
     return (
         <div className='w-full flex flex-col'>
             <Header />
@@ -262,101 +224,6 @@ const Transaction: React.FC = () => {
                     </table>
                 </div>
             </div>
-
-            <div className='flex flex-col px-10 gap-5 w-full text-white mb-20'>
-                <h1 className='text-gray-500 text-3xl text-center'>Fizz Buzz</h1>
-                <div className="flex flex-col bg-gray-500 p-10 rounded-2xl shadow-2xl justify-center items-center gap-4">
-                    <input
-                        id="fizzBuzz"
-                        name="fizzBuzz"
-                        type="number"
-                        value={fizzBuzz}
-                        onChange={(e) => setFizzBuzz(parseInt(e.target.value) || 0)}
-                        className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl w-1/4 " />
-                    <button onClick={handleFizzBuzz} className="bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg">Mulai</button>
-                    <span className="text-wrap">{resultFizzBuzz}</span>
-                </div>
-            </div>
-
-            <div className='flex flex-col px-10 gap-5 w-full text-white mb-20'>
-                <h1 className='text-gray-500 text-3xl text-center'>Biner String</h1>
-                <div className="w-full flex flex-col bg-gray-500 p-10 rounded-2xl shadow-2xl justify-center items-center gap-8">
-                    <div className='flex flex-col gap-4 w-full'>
-                        <div className='flex flex-col gap-2 items-center'>
-                            <label htmlFor="binerString">Data</label>
-                            <input
-                                id="binerString"
-                                name="binerString"
-                                type="text"
-                                placeholder="Masukan angka dengan pemisah ','. contoh: 10, 12, 11, 40"
-                                value={binerString}
-                                onChange={(e) => setBinerString(e.target.value)}
-                                className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl w-1/2" />
-                        </div>
-                        <div className='flex flex-row justify-center gap-4'>
-                            <div className='flex flex-col gap-2 text-center'>
-                                <label htmlFor="mBinerString">M</label>
-                                <input
-                                    id="mBinerString"
-                                    name="mBinerString"
-                                    type="text"
-                                    placeholder="Masukan angka dengan pemisah ','. contoh: 10, 12, 11, 40"
-                                    value={mBinerString}
-                                    onChange={(e) => setMbinerString(parseInt(e.target.value) || 0)}
-                                    className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl" />
-                            </div>
-                            <div className='flex flex-col gap-2 text-center'>
-                                <label htmlFor="mBinerString">N</label>
-                                <input
-                                    id="nBinerString"
-                                    name="nBinerString"
-                                    type="text"
-                                    placeholder="Masukan angka dengan pemisah ','. contoh: 10, 12, 11, 40"
-                                    value={nBinerString}
-                                    onChange={(e) => setNbinerString(parseInt(e.target.value) || 0)}
-                                    className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl" />
-                            </div>
-                        </div>
-                    </div>
-                    <button onClick={handleBinerString} className="bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg">Mulai</button>
-                    <span className="text-wrap">{resultBinerString}</span>
-                </div>
-            </div>
-
-            <div className='flex flex-col px-10 gap-5 w-full text-white mb-20'>
-                <h1 className='text-gray-500 text-3xl text-center'>Split Array</h1>
-                <div className="w-full flex flex-col bg-gray-500 p-10 rounded-2xl shadow-2xl justify-center items-center gap-8">
-                    <div className='flex flex-col gap-4 w-full'>
-                        <div className='flex flex-col gap-2 items-center'>
-                            <label htmlFor="splitArray">Data</label>
-                            <input
-                                id="splitArray"
-                                name="splitArray"
-                                type="text"
-                                placeholder="Masukan angka dengan pemisah ','. contoh: 10, 12, 11, 40"
-                                value={splitArray}
-                                onChange={(e) => setSplitArray(e.target.value)}
-                                className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl w-1/2" />
-                        </div>
-                        <div className='flex flex-row justify-center gap-4'>
-                            <div className='flex flex-col gap-2 text-center'>
-                                <label htmlFor="kSplitArray">K</label>
-                                <input
-                                    id="kSplitArray"
-                                    name="kSplitArray"
-                                    type="text"
-                                    placeholder="Masukan angka dengan pemisah ','. contoh: 10, 12, 11, 40"
-                                    value={kSplitArray}
-                                    onChange={(e) => setKsplitArray(parseInt(e.target.value) || 0)}
-                                    className="bg-transparent text-white px-4 py-4 border border-white rounded-2xl" />
-                            </div>
-                        </div>
-                    </div>
-                    <button onClick={handleSplitArray} className="bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg">Mulai</button>
-                    <span className="text-wrap">{resultSplitArray}</span>
-                </div>
-            </div>
-
             <div className='flex flex-col px-10 gap-5 w-full text-white mb-20'>
                 <h1 className='text-gray-500 text-3xl text-center'>Aplikasi Pencatatan Transaksi</h1>
                 <div className='flex flex-row gap-5'>
@@ -367,7 +234,7 @@ const Transaction: React.FC = () => {
                         </div>
                         <div className='flex flex-col gap-2'>
                             <label htmlFor="amount">Nominal</label>
-                            <input className='bg-transparent text-white px-4 py-4 border border-white rounded-2xl' id="amount" type="number" pattern="-?[0-9]+" value={amount} onChange={(e) => setAmount(parseInt(e.target.value) || 0)} />
+                            <input className='bg-transparent text-white px-4 py-4 border border-white rounded-2xl' id="amount" type="number" pattern="-?[0-9]+" value={amount} onChange={(e) => setAmount(Number(e.target.value))} />
                         </div>
                         <div className='flex flex-row gap-4'>
                             <button className='bg-green-300 px-10 py-3 rounded-2xl text-gray-500 text-lg' onClick={handleSubmit}>{isEdit ? 'Ubah' : 'Tambah'}</button>
